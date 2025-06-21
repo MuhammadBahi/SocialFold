@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile • SocialHub</title>
+  <link rel="stylesheet" href="/style/profile.css">
+</head>
+
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">SocialFold</div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="#">Explore</a>
+      <a href="#">Notifications</a>
+      <img src="<%= D.image %>"
+        alt="Profile Pic" />
+    </div>
+  </div>
+
+  <!-- Banner & Profile -->
+  <div class="banner"></div>
+
+  <div class="profile-section">
+    <div class="profile-photo-container">
+      <img src="<%= D.image %>" alt="User" id="profile-photo" />
+      <% if (userData && D._id.toString()===userData._id.toString()) { %>
+        <div class="photo-upload-overlay">
+          <label for="profile-photo-input" class="upload-btn">
+            📷 Change Photo
+          </label>
+          <input type="file" id="profile-photo-input" accept="image/*" style="display: none;" />
+        </div>
+        <% } %>
+    </div>
+    <h2>
+      <%= D.name %>
+    </h2>
+    <p><a href="/profile/@<%= D.username %>" class="profile-username">@<%= D.username %></a></p>
+
+    <!-- Follower Stats -->
+    <div class="follower-stats">
+      <div class="stat">
+        <span class="count" id="followers-count">
+          <%= D.followers && D.followers.length ? D.followers.length : 0 %>
+        </span>
+        <span class="label">Followers</span>
+      </div>
+      <div class="stat">
+        <span class="count" id="following-count">
+          <%= D.following && D.following.length ? D.following.length : 0 %>
+        </span>
+        <span class="label">Following</span>
+      </div>
+      <div class="stat">
+        <span class="count">
+          <%= posts ? posts.length : 0 %>
+        </span>
+        <span class="label">Posts</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <% if (userData && D._id.toString() !==userData._id.toString()) { %>
+        <button class="btn-follow" data-user-id="<%= D._id %>" onclick="toggleFollow(this)">
+          <% if (userData.following && userData.following.includes(D._id.toString())) { %>
+            Unfollow
+            <% } else { %>
+              Follow
+              <% } %>
+        </button>
+        <% } %>
+          <button class="btn-message">Message</button>
+    </div>
+  </div>
+
+  <!-- Post Form -->
+  <% if (userData && D._id.toString()===userData._id.toString()) { %>
+    <form class="post-form" action="/post" method="post" enctype="multipart/form-data">
+      <input type="text" name="title" placeholder="What's on your mind?" required />
+      <textarea name="content" placeholder="Add more details..." required></textarea>
+      <div class="media-upload">
+        <label for="media">Add Image or Video:</label>
+        <input type="file" name="media" accept="image/*,video/*" />
+        <small>Max size: 10MB. Supported: JPG, PNG, GIF, MP4, MOV</small>
+      </div>
+      <button type="submit">Post</button>
+      <div style="clear: both;"></div>
+    </form>
+    <% } %>
+
+      <!-- Posts Feed -->
+      <div class="posts">
+        <% if (posts && posts.length> 0) { %>
+          <% posts.forEach(function(post) { %>
+            <div class="post">
+              <div class="post-header">
+                <div class="post-user">
+                  <img src="<%= D.image || 'https://source.unsplash.com/40x40/?user' %>" alt="User" />
+                  <div class="post-user-details">
+                    <span class="name">
+                      <%= D.name %>
+                    </span>
+                    <span class="username">@<%= D.username %></span>
+                  </div>
+                </div>
+                <% if (userData && D._id.toString()===userData._id.toString()) { %>
+                  <div class="actions">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                  </div>
+                  <% } %>
+              </div>
+              <h3>
+                <%= post.title %>
+              </h3>
+              <p>
+                <%= post.content %>
+              </p>
+              <% if (post.image) { %>
+                <img src="<%= post.image %>" alt="Post Image" class="post-image" />
+                <% } %>
+                  <div class="feed-actions">
+                    <button class="like-button" data-post-id="<%= post._id %>" onclick="toggleLike(this)">
+                      <% if (post.likes && post.likes.includes(userData._id.toString())) { %>
+                        ❤️ Liked
+                        <% } else { %>
+                          🤍 Like
+                          <% } %>
+                    </button>
+                    <span class="like-count">
+                      <%= post.likes ? post.likes.length : 0 %> Likes
+                    </span>
+                  </div>
+            </div>
+            <% }); %>
+              <% } else { %>
+                <div class="no-posts">
+                  <p>No posts yet.</p>
+                </div>
+                <% } %>
+      </div>
+
+      <script>
+        // Profile photo upload functionality
+        document.addEventListener('DOMContentLoaded', function () {
+          const photoInput = document.getElementById('profile-photo-input');
+          const profilePhoto = document.getElementById('profile-photo');
+
+          if (photoInput) {
+            photoInput.addEventListener('change', function (e) {
+              const file = e.target.files[0];
+              if (file) {
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                  profilePhoto.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+
+                // Upload to server
+                uploadProfilePhoto(file);
+              }
+            });
+          }
+        });
+
+        async function uploadProfilePhoto(file) {
+          const formData = new FormData();
+          formData.append('profilePhoto', file);
+
+          try {
+            const response = await fetch('/upload-profile-photo', {
+              method: 'POST',
+              body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              // Update all profile photos on the page
+              const allProfilePhotos = document.querySelectorAll('img[src*="profile-photos"], img[src*="default"]');
+              allProfilePhotos.forEach(img => {
+                if (img.src.includes('profile-photos') || img.src.includes('blank-profile-picture')) {
+                  img.src = data.photoPath;
+                }
+              });
+
+              // Show success message
+              showMessage('Profile photo updated successfully!', 'success');
+            } else {
+              showMessage(data.message || 'Failed to upload photo', 'error');
+            }
+          } catch (error) {
+            console.error('Upload error:', error);
+            showMessage('Network error occurred', 'error');
+          }
+        }
+
+        function showMessage(message, type) {
+          // Create message element
+          const messageDiv = document.createElement('div');
+          messageDiv.className = `message ${type}`;
+          messageDiv.textContent = message;
+          messageDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+            ${type === 'success' ? 'background: #4CAF50;' : 'background: #f44336;'}
+          `;
+
+          document.body.appendChild(messageDiv);
+
+          // Remove after 3 seconds
+          setTimeout(() => {
+            messageDiv.remove();
+          }, 3000);
+        }
+
+        async function toggleFollow(button) {
+          const userId = button.getAttribute('data-user-id');
+
+          try {
+            const response = await fetch(`/follow/${userId}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              if (data.following) {
+                button.textContent = 'Unfollow';
+                button.style.backgroundColor = '#e74c3c';
+              } else {
+                button.textContent = 'Follow';
+                button.style.backgroundColor = '#3498db';
+              }
+
+              // Update follower and following counts
+              document.getElementById('followers-count').textContent = data.followersCount;
+              document.getElementById('following-count').textContent = data.followingCount;
+            } else {
+              alert(data.message || 'Something went wrong');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('Network error occurred');
+          }
+        }
+
+        async function toggleLike(button) {
+          const postId = button.getAttribute('data-post-id');
+          const likeCount = button.nextElementSibling;
+
+          try {
+            const response = await fetch(`/like/${postId}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              if (data.liked) {
+                button.innerHTML = '❤️ Liked';
+                button.style.color = '#e91e63';
+              } else {
+                button.innerHTML = '🤍 Like';
+                button.style.color = '#555';
+              }
+
+              // Update like count
+              likeCount.textContent = `${data.likesCount} Likes`;
+            } else {
+              alert(data.message || 'Something went wrong');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('Network error occurred');
+          }
+        }
+      </script>
+
+</body>
+
+</html>

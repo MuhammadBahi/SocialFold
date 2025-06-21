@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home • SocialHub</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #fff;
+      padding: 12px 24px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ff5722;
+    }
+
+    .bar {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .bar a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .profile_bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .profile_bar img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+
+    .main-container {
+      display: flex;
+      max-width: 1200px;
+      margin: 30px auto;
+      gap: 30px;
+    }
+
+    .feed-container {
+      flex: 1;
+      max-width: 800px;
+    }
+
+    .feed-card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .feed-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .feed-header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .feed-header .name {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .feed-header .username {
+      color: #f88d8d;
+      font-size: 14px;
+      margin-left: 5px;
+    }
+
+    .feed-header .timestamp {
+      color: #888;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .feed-card p {
+      color: #555;
+    }
+
+    .feed-card img.feed-img {
+      max-width: 100%;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+
+    .feed-actions {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .like-button {
+      background-color: transparent;
+      border: none;
+      color: #e91e63;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      padding: 0;
+    }
+
+    .like-count {
+      color: #555;
+      font-size: 14px;
+    }
+
+    .comment-button {
+      background-color: transparent;
+      border: none;
+      color: #2196f3;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      padding: 0;
+      margin-left: 15px;
+    }
+
+    .comment-count {
+      color: #555;
+      font-size: 14px;
+      margin-left: 5px;
+    }
+
+    /* Comments Section */
+    .comments-section {
+      margin-top: 15px;
+      border-top: 1px solid #eee;
+      padding-top: 15px;
+    }
+
+    .comment-form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .comment-form input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    .comment-form button {
+      padding: 8px 16px;
+      background: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .comment-form button:hover {
+      background: #1976d2;
+    }
+
+    .comments-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .comment {
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .comment:last-child {
+      border-bottom: none;
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .comment-user {
+      font-weight: bold;
+      color: #333;
+      text-decoration: none;
+    }
+
+    .comment-user:hover {
+      color: #ff5722;
+    }
+
+    .comment-time {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .comment-content {
+      color: #555;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .comment-actions {
+      margin-top: 5px;
+    }
+
+    .comment-actions button {
+      background: none;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      font-size: 12px;
+      padding: 2px 6px;
+    }
+
+    .comment-actions button:hover {
+      color: #e91e63;
+    }
+
+    .comment-user-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .comment-user-pic {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    @media (max-width: 600px) {
+      .bar {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+      }
+    }
+
+    .user-link {
+      text-decoration: none;
+      color: inherit;
+      transition: color 0.2s;
+    }
+
+    .user-link:hover {
+      color: #ff5722;
+    }
+
+    .user-link .username {
+      color: #888;
+    }
+
+    .user-link:hover .username {
+      color: #ff5722;
+    }
+
+    /* Notification styles */
+    .notification-container {
+      position: relative;
+      margin-right: 20px;
+    }
+
+    .notification-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      position: relative;
+      padding: 5px;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #e91e63;
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .notification-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 350px;
+      max-height: 400px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      overflow: hidden;
+    }
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      background: #f8f9fa;
+    }
+
+    .notification-header h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .notification-header button {
+      background: #2196f3;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .notification-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .notification-item {
+      padding: 12px 15px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
+    }
+
+    .notification-item:hover {
+      background: #f8f9fa;
+    }
+
+    .notification-item.unread {
+      background: #f0f8ff;
+    }
+
+    .notification-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .notification-user-pic {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .notification-text p {
+      margin: 0 0 5px 0;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .notification-text small {
+      color: #666;
+      font-size: 12px;
+    }
+
+    .unread-dot {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 8px;
+      height: 8px;
+      background: #e91e63;
+      border-radius: 50%;
+    }
+
+    .no-notifications {
+      padding: 20px;
+      text-align: center;
+      color: #666;
+    }
+
+    .no-comments {
+      padding: 15px;
+      text-align: center;
+      color: #666;
+      font-style: italic;
+    }
+
+    .ad-section {
+      width: 300px;
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+    }
+
+    .ad-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .ad-card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .ad-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .ad-content {
+      text-align: center;
+    }
+
+    .ad-btn {
+      background: #2196f3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .trending-section {
+      margin-top: 20px;
+    }
+
+    .trending-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .trending-number {
+      background: #2196f3;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+    }
+
+    .trending-topic {
+      font-weight: bold;
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">SocialFold</div>
+    <div class="bar">
+      <div class="notification-container">
+        <button class="notification-btn" onclick="toggleNotifications()">
+          🔔 <span id="notification-count" class="notification-badge">0</span>
+        </button>
+        <div id="notification-dropdown" class="notification-dropdown" style="display: none;">
+          <div class="notification-header">
+            <h3>Notifications</h3>
+            <button onclick="markAllAsRead()">Mark all as read</button>
+          </div>
+          <div id="notification-list" class="notification-list">
+            <!-- Notifications will be loaded here -->
+          </div>
+        </div>
+      </div>
+      <a href="/logout">Logout</a>
+      <div class="profile_bar">
+        <img src="<%= userData.image %>" alt="User" />
+        <a href="/profile/@<%= userData.username %>" class="header-profile-link">
+          <%= userData.name %>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feed -->
+  <div class="main-container">
+    <div class="feed-container">
+      <% posts.forEach(function(post) { %>
+        <div class="feed-card">
+          <div class="feed-header">
+            <img
+              src="<%= post.users && post.users.length > 0 ? post.users[0].image : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' %>"
+              alt="User" />
+            <div>
+              <div class="name">
+                <% if (post.users && post.users.length> 0) { %>
+                  <a href="/profile/@<%= post.users[0].username %>" class="user-link">
+                    <%= post.users[0].name || 'Unknown User' %>
+                      <span class="username">@<%= post.users[0].username || 'unknown' %></span>
+                  </a>
+                  <% } else { %>
+                    Unknown User <span class="username">@unknown</span>
+                    <% } %>
+              </div>
+              <div class="timestamp">
+                <%= formatTime(post.createdAt || post.time) %>
+              </div>
+            </div>
+          </div>
+          <h3>
+            <%= post.title %>
+          </h3>
+          <p>
+            <%= post.content %>
+          </p>
+          <% if (post.media) { %>
+            <% if (post.media.type==='image' ) { %>
+              <img class="feed-img" src="<%= post.media.path %>" alt="Post image" />
+              <% } else if (post.media.type==='video' ) { %>
+                <video class="feed-video" controls>
+                  <source src="<%= post.media.path %>" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+                <% } %>
+                  <% } else if (post.image) { %>
+                    <img class="feed-img" src="<%= post.image %>" alt="Post image" />
+                    <% } %>
+                      <div class="feed-actions">
+                        <button class="like-button" data-post-id="<%= post._id %>" onclick="toggleLike(this)">
+                          <% if (post.likes && post.likes.includes(userData._id.toString())) { %>
+                            ❤️ Liked
+                            <% } else { %>
+                              🤍 Like
+                              <% } %>
+                        </button>
+                        <span class="like-count">
+                          <%= post.likes ? post.likes.length : 0 %> Likes
+                        </span>
+
+                        <button class="comment-button" onclick="toggleComments('<%= post._id %>')">
+                          💬 Comment
+                        </button>
+                        <span class="comment-count" id="comment-count-<%= post._id %>">0 Comments</span>
+                      </div>
+
+                      <!-- Comments Section -->
+                      <div class="comments-section" id="comments-<%= post._id %>" style="display: none;">
+                        <!-- Comment Form -->
+                        <div class="comment-form">
+                          <input type="text" placeholder="Write a comment..." id="comment-input-<%= post._id %>" />
+                          <button onclick="addComment('<%= post._id %>')">Post</button>
+                        </div>
+
+                        <!-- Comments List -->
+                        <div class="comments-list" id="comments-list-<%= post._id %>">
+                          <!-- Comments will be loaded here -->
+                        </div>
+                      </div>
+        </div>
+        <% }); %>
+    </div>
+
+    <!-- Ad Section -->
+    <div class="ad-section">
+      <div class="ad-container">
+        <h3>Sponsored</h3>
+
+        <!-- Ad 1 -->
+        <div class="ad-card">
+          <img src="https://source.unsplash.com/300x200/?product" alt="Ad" class="ad-image" />
+          <div class="ad-content">
+            <h4>Amazing Product</h4>
+            <p>Get 50% off on premium products!</p>
+            <button class="ad-btn">Shop Now</button>
+          </div>
+        </div>
+
+        <!-- Ad 2 -->
+        <div class="ad-card">
+          <img src="https://source.unsplash.com/300x200/?technology" alt="Ad" class="ad-image" />
+          <div class="ad-content">
+            <h4>Tech Deals</h4>
+            <p>Latest gadgets at best prices</p>
+            <button class="ad-btn">Explore</button>
+          </div>
+        </div>
+
+        <!-- Ad 3 -->
+        <div class="ad-card">
+          <img src="https://source.unsplash.com/300x200/?fashion" alt="Ad" class="ad-image" />
+          <div class="ad-content">
+            <h4>Fashion Sale</h4>
+            <p>Trendy clothes for everyone</p>
+            <button class="ad-btn">Buy Now</button>
+          </div>
+        </div>
+
+        <!-- Trending Topics -->
+        <div class="trending-section">
+          <h3>Trending</h3>
+          <div class="trending-item">
+            <span class="trending-number">#1</span>
+            <span class="trending-topic">Technology</span>
+          </div>
+          <div class="trending-item">
+            <span class="trending-number">#2</span>
+            <span class="trending-topic">Programming</span>
+          </div>
+          <div class="trending-item">
+            <span class="trending-number">#3</span>
+            <span class="trending-topic">Web Development</span>
+          </div>
+          <div class="trending-item">
+            <span class="trending-number">#4</span>
+            <span class="trending-topic">Social Media</span>
+          </div>
+          <div class="trending-item">
+            <span class="trending-number">#5</span>
+            <span class="trending-topic">Innovation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function toggleLike(button) {
+      const postId = button.getAttribute('data-post-id');
+      const likeCount = button.nextElementSibling;
+
+      try {
+        const response = await fetch(`/like/${postId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          if (data.liked) {
+            button.innerHTML = '❤️ Liked';
+            button.style.color = '#e91e63';
+          } else {
+            button.innerHTML = '🤍 Like';
+            button.style.color = '#555';
+          }
+
+          // Update like count
+          likeCount.textContent = `${data.likesCount} Likes`;
+        } else {
+          alert(data.message || 'Something went wrong');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Network error occurred');
+      }
+    }
+
+    // Toggle comments section
+    async function toggleComments(postId) {
+      const commentsSection = document.getElementById(`comments-${postId}`);
+      const commentsList = document.getElementById(`comments-list-${postId}`);
+
+      if (commentsSection.style.display === 'none') {
+        commentsSection.style.display = 'block';
+        // Load comments if not already loaded
+        if (commentsList.children.length === 0) {
+          await loadComments(postId);
+        }
+        // Store state in localStorage
+        localStorage.setItem(`comments-${postId}`, 'open');
+      } else {
+        commentsSection.style.display = 'none';
+        // Store state in localStorage
+        localStorage.setItem(`comments-${postId}`, 'closed');
+      }
+    }
+
+    // Restore comment states on page load
+    document.addEventListener('DOMContentLoaded', function () {
+      loadNotificationCount();
+
+      // Restore comment states
+      setTimeout(() => {
+        const posts = document.querySelectorAll('.feed-card');
+        posts.forEach(post => {
+          const likeButton = post.querySelector('.like-button');
+          if (likeButton) {
+            const postId = likeButton.getAttribute('data-post-id');
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            const commentsList = document.getElementById(`comments-list-${postId}`);
+
+            if (commentsSection && commentsList) {
+              const state = localStorage.getItem(`comments-${postId}`);
+              if (state === 'open') {
+                commentsSection.style.display = 'block';
+                // Load comments if section is open
+                if (commentsList.children.length === 0) {
+                  loadComments(postId);
+                }
+              }
+            }
+          }
+        });
+      }, 100);
+    });
+
+    // Load comments for a post
+    async function loadComments(postId) {
+      try {
+        const response = await fetch(`/comments/${postId}`);
+        const data = await response.json();
+
+        console.log('Comments response:', data); // Debug log
+
+        if (data.success) {
+          displayComments(postId, data.comments);
+          updateCommentCount(postId, data.comments.length);
+        } else {
+          console.error('Failed to load comments:', data.message);
+        }
+      } catch (error) {
+        console.error('Error loading comments:', error);
+      }
+    }
+
+    // Display comments
+    function displayComments(postId, comments) {
+      const commentsList = document.getElementById(`comments-list-${postId}`);
+      commentsList.innerHTML = '';
+
+      if (!comments || comments.length === 0) {
+        commentsList.innerHTML = '<div class="no-comments">No comments yet. Be the first to comment!</div>';
+        return;
+      }
+
+      comments.forEach(comment => {
+        const commentDiv = document.createElement('div');
+        commentDiv.className = 'comment';
+
+        const userImage = comment.user && comment.user.image ? comment.user.image : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+        const userName = comment.user ? comment.user.name : 'Unknown User';
+        const username = comment.user ? comment.user.username : 'unknown';
+
+        commentDiv.innerHTML = `
+          <div class="comment-header">
+            <div class="comment-user-info">
+              <img src="${userImage}" alt="User" class="comment-user-pic" />
+              <a href="/profile/@${username}" class="comment-user">${userName}</a>
+            </div>
+            <span class="comment-time">${formatTime(comment.time)}</span>
+          </div>
+          <div class="comment-content">${comment.content}</div>
+          <div class="comment-actions">
+            <button onclick="likeComment('${comment._id}', this)">
+              ${comment.likes && comment.likes.includes('<%= userData ? userData._id : "" %>') ? '❤️' : '🤍'} 
+              ${comment.likes ? comment.likes.length : 0}
+            </button>
+          </div>
+        `;
+        commentsList.appendChild(commentDiv);
+      });
+    }
+
+    // Add a new comment
+    async function addComment(postId) {
+      const input = document.getElementById(`comment-input-${postId}`);
+      const content = input.value.trim();
+
+      if (!content) {
+        alert('Please write a comment');
+        return;
+      }
+
+      try {
+        const response = await fetch(`/comment/${postId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ content })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          input.value = '';
+          // Reload comments to show the new one
+          await loadComments(postId);
+        } else {
+          alert(data.message || 'Failed to add comment');
+        }
+      } catch (error) {
+        console.error('Error adding comment:', error);
+        alert('Network error occurred');
+      }
+    }
+
+    // Like/Unlike a comment
+    async function likeComment(commentId, button) {
+      try {
+        const response = await fetch(`/comment-like/${commentId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          if (data.liked) {
+            button.innerHTML = `❤️ ${data.likesCount}`;
+          } else {
+            button.innerHTML = `🤍 ${data.likesCount}`;
+          }
+        }
+      } catch (error) {
+        console.error('Error liking comment:', error);
+      }
+    }
+
+    // Update comment count
+    function updateCommentCount(postId, count) {
+      const countElement = document.getElementById(`comment-count-${postId}`);
+      countElement.textContent = `${count} Comments`;
+    }
+
+    // Format time
+    function formatTime(time) {
+      const date = new Date(time);
+      const now = new Date();
+      const diff = now - date;
+
+      const minutes = Math.floor(diff / 60000);
+      const hours = Math.floor(diff / 3600000);
+      const days = Math.floor(diff / 86400000);
+
+      if (minutes < 1) return 'Just now';
+      if (minutes < 60) return `${minutes}m ago`;
+      if (hours < 24) return `${hours}h ago`;
+      return `${days}d ago`;
+    }
+
+    // Notification functions
+    let notificationsLoaded = false;
+
+    // Load notifications on page load
+    document.addEventListener('DOMContentLoaded', function () {
+      loadNotificationCount();
+    });
+
+    async function loadNotificationCount() {
+      try {
+        const response = await fetch('/notifications/unread-count');
+        const data = await response.json();
+
+        if (data.success) {
+          const badge = document.getElementById('notification-count');
+          badge.textContent = data.count;
+          badge.style.display = data.count > 0 ? 'inline' : 'none';
+        }
+      } catch (error) {
+        console.error('Error loading notification count:', error);
+      }
+    }
+
+    async function toggleNotifications() {
+      const dropdown = document.getElementById('notification-dropdown');
+
+      if (dropdown.style.display === 'none') {
+        dropdown.style.display = 'block';
+        if (!notificationsLoaded) {
+          await loadNotifications();
+          notificationsLoaded = true;
+        }
+      } else {
+        dropdown.style.display = 'none';
+      }
+    }
+
+    async function loadNotifications() {
+      try {
+        const response = await fetch('/notifications');
+        const data = await response.json();
+
+        if (data.success) {
+          displayNotifications(data.notifications);
+        }
+      } catch (error) {
+        console.error('Error loading notifications:', error);
+      }
+    }
+
+    function displayNotifications(notifications) {
+      const list = document.getElementById('notification-list');
+
+      if (!notifications || notifications.length === 0) {
+        list.innerHTML = '<div class="no-notifications">No notifications yet</div>';
+        return;
+      }
+
+      list.innerHTML = '';
+
+      notifications.forEach(notification => {
+        const notificationDiv = document.createElement('div');
+        notificationDiv.className = `notification-item ${notification.read ? 'read' : 'unread'}`;
+
+        let message = '';
+        if (notification.type === 'follow') {
+          message = `<strong>${notification.sender.name}</strong> started following you`;
+        } else if (notification.type === 'post') {
+          message = `<strong>${notification.sender.name}</strong> posted: ${notification.post ? notification.post.title : 'something new'}`;
+        }
+
+        notificationDiv.innerHTML = `
+          <div class="notification-content">
+            <img src="${notification.sender.image || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}" alt="User" class="notification-user-pic" />
+            <div class="notification-text">
+              <p>${message}</p>
+              <small>${formatTime(notification.time)}</small>
+            </div>
+          </div>
+          ${!notification.read ? '<div class="unread-dot"></div>' : ''}
+        `;
+
+        notificationDiv.onclick = () => markAsRead(notification._id);
+        list.appendChild(notificationDiv);
+      });
+    }
+
+    async function markAsRead(notificationId) {
+      try {
+        await fetch(`/notifications/${notificationId}/read`, { method: 'POST' });
+        loadNotificationCount();
+        await loadNotifications();
+      } catch (error) {
+        console.error('Error marking as read:', error);
+      }
+    }
+
+    async function markAllAsRead() {
+      try {
+        await fetch('/notifications/read-all', { method: 'POST' });
+        loadNotificationCount();
+        await loadNotifications();
+      } catch (error) {
+        console.error('Error marking all as read:', error);
+      }
+    }
+
+    // Close notification dropdown when clicking outside
+    document.addEventListener('click', function (event) {
+      const container = document.querySelector('.notification-container');
+      const dropdown = document.getElementById('notification-dropdown');
+
+      if (!container.contains(event.target) && dropdown.style.display === 'block') {
+        dropdown.style.display = 'none';
+      }
+    });
+  </script>
+
+</body>
+
+</html>
